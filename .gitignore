@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Project Specific Logs & Output
+*.log
+final_test_output.txt
+labels_out.txt
+test_output.txt
+dataset/evaluation_report.txt
+
+# Datasets
+*.csv
+*.parquet
+dataset/final_threat_dataset.csv
+dataset/final_threat_dataset.parquet
+
+# Model weights
+*.pkl
+*.h5
+*.joblib
+*.pt
+*.pth
+model/binary/
+model/multi_class/
+node_modules/
+build/
+dist/
