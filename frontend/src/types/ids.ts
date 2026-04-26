@@ -1,21 +1,22 @@
 export interface PredictionResult {
   id: number;
-  features: Record<string, number | string>;
-  prediction: "attack" | "normal";
-  attack_type?: string;
+  features: Record<string, any>;
+  prediction: "attack" | "safe";
+  attack_type: string | null;
   confidence: number;
 }
 
 export interface BatchResponse {
-  total: number;
-  attacks: number;
-  normal: number;
+  total_packets: number;
+  threats_detected: number;
+  avg_confidence: number;
   attack_breakdown: Record<string, number>;
   results: PredictionResult[];
 }
 
 export interface SinglePredictionResponse {
-  prediction: "attack" | "normal";
-  attack_type?: string;
-  confidence: number;
+  Prediction: string;
+  Attack_Type: string;
+  Confidence: number;
+  [key: string]: any;
 }

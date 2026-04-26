@@ -24,15 +24,14 @@ ENV/
 final_test_output.txt
 labels_out.txt
 test_output.txt
-dataset/evaluation_report.txt
+summary.txt
 
 # Datasets
 *.csv
 *.parquet
-dataset/final_threat_dataset.csv
-dataset/final_threat_dataset.parquet
+dataset/evaluation_report.txt
 
-# Model weights
+# Model weights & artifacts
 *.pkl
 *.h5
 *.joblib
@@ -40,6 +39,34 @@ dataset/final_threat_dataset.parquet
 *.pth
 model/binary/
 model/multi_class/
+
+# Database files
+*.db
+
+# Node / Frontend
 node_modules/
 build/
 dist/
+dist-ssr/
+
+# Bun (project uses npm)
+bun.lock
+bun.lockb
+
+# Test & debug scripts (root level)
+check_labels.py
+test_logic.py
+
+# Backend test/debug scripts
+backend/test_*.py
+backend/check_*.py
+
+# Playwright / Vitest boilerplate
+frontend/playwright-fixture.ts
+frontend/playwright.config.ts
+frontend/vitest.config.ts
+frontend/src/test/
+
+# Misc
+frontend/public/placeholder.svg
+frontend/README.md

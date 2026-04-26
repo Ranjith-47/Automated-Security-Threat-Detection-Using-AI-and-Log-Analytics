@@ -3,15 +3,9 @@ import numpy as np
 
 print("=== DATA VALIDATION STARTED ===")
 
-# ─────────────────────────────────────────────
-# Step 1: Load data
-# ─────────────────────────────────────────────
 df = pd.read_parquet("final_threat_dataset.parquet")  # faster than CSV
 print("\nShape:", df.shape)
 
-# ─────────────────────────────────────────────
-# Step 2: Check duplicates
-# ─────────────────────────────────────────────
 duplicate_count = df.duplicated().sum()
 print(f"\nDuplicate rows: {duplicate_count}")
 if duplicate_count > 0:
@@ -19,24 +13,15 @@ if duplicate_count > 0:
 else:
     print("  OK: No duplicate rows")
 
-# ─────────────────────────────────────────────
-# Step 3: Class distribution
-# ─────────────────────────────────────────────
 print("\nClass distribution (binary_label):")
 print(df["binary_label"].value_counts())
 
 print("\nClass distribution (attack_type):")
 print(df["attack_type"].value_counts())
 
-# ─────────────────────────────────────────────
-# Step 4: Unique label values
-# ─────────────────────────────────────────────
 print("\nUnique binary_label values:", df["binary_label"].unique())
 print("Unique attack_type values:", df["attack_type"].unique())
 
-# ─────────────────────────────────────────────
-# Step 5: Missing values
-# ─────────────────────────────────────────────
 missing = df.isnull().sum().sum()
 print(f"\nTotal missing values: {missing}")
 if missing > 0:
@@ -45,9 +30,6 @@ if missing > 0:
 else:
     print("  OK: No missing values")
 
-# ─────────────────────────────────────────────
-# Step 6: Inf values (common in network traffic data)
-# ─────────────────────────────────────────────
 numeric_cols = df.select_dtypes(include=[np.number]).columns
 inf_count = np.isinf(df[numeric_cols]).sum().sum()
 print(f"\nTotal inf values: {inf_count}")
@@ -56,9 +38,6 @@ if inf_count > 0:
 else:
     print("  OK: No inf values")
 
-# ─────────────────────────────────────────────
-# Step 7: Leakage risk — suspicious column names
-# ─────────────────────────────────────────────
 print("\nChecking for possible leakage columns...")
 suspicious_keywords = ['label', 'attack', 'class', 'type', 'id', 'timestamp']
 suspicious_cols = [
@@ -73,9 +52,6 @@ if suspicious_cols:
 else:
     print("  OK: No suspicious columns found")
 
-# ─────────────────────────────────────────────
-# Step 8: Constant columns (zero variance — useless for training)
-# ─────────────────────────────────────────────
 print("\nChecking constant columns...")
 constant_cols = [col for col in numeric_cols if df[col].nunique() <= 1]
 if constant_cols:
@@ -85,10 +61,6 @@ if constant_cols:
 else:
     print("  OK: No constant columns")
 
-# ─────────────────────────────────────────────
-# Step 9: Correlation with binary label (leakage check)
-# FIX: encode label separately, don't modify the original df
-# ─────────────────────────────────────────────
 print("\nChecking feature correlation with binary_label...")
 df_corr = df[numeric_cols].copy()
 df_corr["_label"] = (df["binary_label"] == "attack").astype(int)
@@ -106,9 +78,6 @@ if not leakage_risk.empty:
 else:
     print("\n  OK: No feature has suspiciously high correlation with label")
 
-# ─────────────────────────────────────────────
-# Step 10: Data types summary
-# ─────────────────────────────────────────────
 print("\nData types:")
 print(df.dtypes.value_counts().to_string())
 
