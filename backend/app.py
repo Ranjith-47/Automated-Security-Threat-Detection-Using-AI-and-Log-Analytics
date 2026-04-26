@@ -68,7 +68,20 @@ CONSTANT_COLS = [
 ]
 
 # Columns to blindly drop if they exist
-COLUMNS_TO_DROP = ['Label', 'Attack Type', 'attack_type', 'binary_label', 'Timestamp', 'Flow ID', 'Src IP', 'Dst IP', 'Src Port', 'Dst Port'] + CONSTANT_COLS
+COLUMNS_TO_DROP = ['Label', 'Attack Type', 'attack_type', 'binary_label', 'Timestamp', 'Flow ID', 'Src IP', 'Dst IP', 'Src Port', 'Dst Port', 'Fwd Header Length.1'] + CONSTANT_COLS
+
+# Map common CICIDS2017 CSV column names to the names the model was trained on
+COLUMN_RENAME_MAP = {
+    'Total Length of Fwd Packets': 'Fwd Packets Length Total',
+    'Total Length of Bwd Packets': 'Bwd Packets Length Total',
+    'Min Packet Length': 'Packet Length Min',
+    'Max Packet Length': 'Packet Length Max',
+    'Average Packet Size': 'Avg Packet Size',
+    'Init_Win_bytes_forward': 'Init Fwd Win Bytes',
+    'Init_Win_bytes_backward': 'Init Bwd Win Bytes',
+    'act_data_pkt_fwd': 'Fwd Act Data Packets',
+    'min_seg_size_forward': 'Fwd Seg Size Min',
+}
 
 def perform_prediction(df: pd.DataFrame) -> dict:
     """Helper to run the two-stage XGBoost prediction on a DataFrame."""
@@ -79,6 +92,9 @@ def perform_prediction(df: pd.DataFrame) -> dict:
     
     # Drop columns that shouldn't be used for prediction
     df = df.drop(columns=[col for col in COLUMNS_TO_DROP if col in df.columns])
+    
+    # Rename columns to match the model's expected feature names
+    df = df.rename(columns=COLUMN_RENAME_MAP)
     
     required_binary_features = list(binary_scaler.feature_names_in_)
     
